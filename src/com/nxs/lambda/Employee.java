@@ -7,16 +7,16 @@ public class Employee {
 
     private Integer age;
 
-    private Double slary;
+    private Double salary;
 
     public Employee() {
     }
 
-    public Employee(Integer id, String name, Integer age, Double slary) {
+    public Employee(Integer id, String name, Integer age, Double salary) {
         this.id = id;
         this.name = name;
         this.age = age;
-        this.slary = slary;
+        this.salary = salary;
     }
 
     public Integer getId() {
@@ -35,13 +35,14 @@ public class Employee {
         this.name = name;
     }
 
-    public Double getSlary() {
-        return slary;
+    public Double getSalary() {
+        return salary;
     }
 
-    public void setSlary(Double slary) {
-        this.slary = slary;
+    public void setSalary(Double salary) {
+        this.salary = salary;
     }
+
 
     public Integer getAge() {
         return age;
@@ -57,7 +58,7 @@ public class Employee {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
-                ", slary=" + slary +
+                ", salary=" + salary +
                 '}';
     }
 }
