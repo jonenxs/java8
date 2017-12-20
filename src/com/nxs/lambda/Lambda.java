@@ -116,7 +116,7 @@ public class Lambda {
     @Test
     public void test7(){
         Collections.sort(employees,(e1, e2) -> {
-            if(e1.getAge() == e2.getAge()){
+            if(e1.getAge().equals(e2.getAge())){
                 return e1.getName().compareTo(e2.getName());
             } else {
                 return -Integer.compare(e1.getAge(), e2.getAge());
