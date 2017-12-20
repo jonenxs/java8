@@ -5,6 +5,7 @@ import com.nxs.lambda.Employee;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -47,7 +48,7 @@ public class StreamApi {
             new Employee(102,"李四",20,6666.66,Employee.Status.FREE),
             new Employee(102,"李四",20,6666.66,Employee.Status.FREE),
             new Employee(102,"李四",20,6666.66,Employee.Status.FREE),
-            new Employee(103,"王五",20,3333.33,Employee.Status.BUSY),
+            new Employee(103,"王五",17,3333.33,Employee.Status.BUSY),
             new Employee(104,"赵六",22,8888.88,Employee.Status.BUSY),
             new Employee(104,"赵六",22,8888.88,Employee.Status.VOCATION),
             new Employee(104,"赵六",22,8888.88,Employee.Status.VOCATION),
@@ -208,4 +209,107 @@ public class StreamApi {
         System.out.println(min.get());
     }
 
+    /**
+     * 规约
+     * reduce(T identity,BinaryOperator) / reduce(BinaryOperator) 可以将流中元素反复结合起来，得到一个值
+     */
+    @Test
+    public void test9() {
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        Integer reduce = list.stream()
+                .reduce(0, (x, y) -> x + y);
+        System.out.println(reduce);
+
+        System.out.println("-------------------");
+        Optional<Double> sum = employees.stream()
+                .map(Employee::getSalary)
+                .reduce(Double::sum);
+        System.out.println(sum.get());
+    }
+
+    /**
+     * 收集
+     * collect 将流装换为其它形式。接收Collect接口的实现，用T给Stream中元素反复结合起来，得到一个值
+     */
+    @Test
+    public void test10() {
+        List<String> list = employees.stream()
+                .map(Employee::getName)
+                .distinct()
+                .collect(Collectors.toList());
+        list.forEach(System.out::println);
+
+        System.out.println("-----------");
+        Set<String> set = employees.stream()
+                .map(Employee::getName)
+                .collect(Collectors.toSet());
+        set.forEach(System.out::println);
+        System.out.println("------------");
+
+        HashSet<String> hashSet = employees.stream()
+                .map(Employee::getName)
+                .collect(Collectors.toCollection(HashSet::new));
+        hashSet.forEach(System.out::println);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+        //总和
+        Long count = employees.stream()
+                .collect(Collectors.counting());
+        System.out.println(count);
+        //平均值
+        Double average = employees.stream()
+                .collect(Collectors.averagingDouble(Employee::getSalary));
+        System.out.println(average);
+
+        //工资总和
+        Double summing = employees.stream()
+                .collect(Collectors.summingDouble(Employee::getSalary));
+        System.out.println(summing);
+
+        //工资最大值的员工
+        Optional<Employee> maxEmployee = employees.stream()
+                .collect(Collectors.maxBy((e1, e2) -> Double.compare(e1.getSalary(), e2.getSalary())));
+        System.out.println(maxEmployee.get());
+        //工资最小值
+        Optional<Double> minSalary = employees.stream()
+                .map(Employee::getSalary)
+                .collect(Collectors.minBy(Double::compare));
+        System.out.println(minSalary.get());
+
+    }
+
+    @Test
+    public void test11() {
+        //分组
+        Map<Employee.Status, List<Employee>> listMap = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getStatus));
+        System.out.println(listMap);
+        //多级分组
+        Map<Employee.Status, Map<String, List<Employee>>> map = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getStatus, Collectors.groupingBy(e -> {
+                    if (e.getAge() <= 18) {
+                        return "青年";
+                    } else if (e.getAge() > 50) {
+                        return "老年";
+                    } else {
+                        return "中年";
+                    }
+                })));
+        System.out.println(map);
+        //分区
+        Map<Boolean, List<Employee>> booleanListMap = employees.stream()
+                .collect(Collectors.partitioningBy(e -> e.getSalary() > 5000));
+        System.out.println(booleanListMap);
+
+        DoubleSummaryStatistics doubleSummaryStatistics = employees.stream()
+                .collect(Collectors.summarizingDouble(Employee::getSalary));
+        System.out.println(doubleSummaryStatistics.getAverage());
+        System.out.println(doubleSummaryStatistics.getCount());
+
+        String names = employees.stream()
+                .map(Employee::getName)
+                .collect(Collectors.joining(",","[","]"));
+        System.out.println(names);
+
+    }
 }
