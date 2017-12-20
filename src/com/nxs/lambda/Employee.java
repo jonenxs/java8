@@ -12,6 +12,8 @@ public class Employee {
 
     private Double salary;
 
+    private Status status;
+
     public Employee() {
     }
 
@@ -62,6 +64,7 @@ public class Employee {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", salary=" + salary +
+                ", status=" + status +
                 '}';
     }
 
@@ -80,5 +83,27 @@ public class Employee {
     public int hashCode() {
 
         return Objects.hash(getId(), getName(), getAge(), getSalary());
+    }
+
+    public enum Status{
+        FREE,
+        BUSY,
+        VOCATION;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Employee(Integer id, String name, Integer age, Double salary, Status status) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        this.status = status;
     }
 }

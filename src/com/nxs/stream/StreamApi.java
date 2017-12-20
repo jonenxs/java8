@@ -4,10 +4,7 @@ package com.nxs.stream;
 import com.nxs.lambda.Employee;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 
@@ -45,13 +42,16 @@ public class StreamApi {
     }
 
     List<Employee> employees = Arrays.asList(
-            new Employee(101,"张三",18,9999.99),
-            new Employee(102,"李四",20,6666.66),
-            new Employee(103,"王五",20,3333.33),
-            new Employee(104,"赵六",22,8888.88),
-            new Employee(104,"赵六",22,8888.88),
-            new Employee(104,"赵六",22,8888.88),
-            new Employee(105,"田七",19,7777.7)
+            new Employee(101,"张三",18,9999.99, Employee.Status.FREE),
+            new Employee(102,"李四",20,6666.66,Employee.Status.FREE),
+            new Employee(102,"李四",20,6666.66,Employee.Status.FREE),
+            new Employee(102,"李四",20,6666.66,Employee.Status.FREE),
+            new Employee(102,"李四",20,6666.66,Employee.Status.FREE),
+            new Employee(103,"王五",20,3333.33,Employee.Status.BUSY),
+            new Employee(104,"赵六",22,8888.88,Employee.Status.BUSY),
+            new Employee(104,"赵六",22,8888.88,Employee.Status.VOCATION),
+            new Employee(104,"赵六",22,8888.88,Employee.Status.VOCATION),
+            new Employee(105,"田七",19,7777.7,Employee.Status.FREE)
     );
 
     /**
@@ -161,6 +161,51 @@ public class StreamApi {
                         return -e1.getAge().compareTo(e2.getAge());
                     }
                 }).forEach(System.out::println);
+    }
+
+    /**
+     * 终止操作
+     * 查找与匹配
+     *  allMatch 检查是否匹配所有元素
+     *  anyMatch 检查是否至少匹配一个元素
+     *  noneMatch 检查是否没有匹配所有元素
+     *  findFirst 返回第一个元素
+     *  count 返回流中元素的个数
+     *  max 返回流中最大值
+     *  min 返回流中最小值
+     */
+    @Test
+    public void test8() {
+        boolean allMatch = employees.stream()
+                .allMatch(e -> e.getStatus().equals(Employee.Status.BUSY));
+        System.out.println(allMatch);
+        boolean anyMatch = employees.stream()
+                .anyMatch(e -> e.getStatus().equals(Employee.Status.BUSY));
+        System.out.println(anyMatch);
+
+        boolean noneMatch = employees.stream()
+                .noneMatch(e -> e.getStatus().equals(Employee.Status.BUSY));
+        System.out.println(noneMatch);
+
+        Optional<Employee> optional = employees.stream()
+                .sorted((e1, e2) -> -Double.compare(e1.getSalary(), e2.getSalary()))
+                .findFirst();
+
+        System.out.println(optional.get());
+
+        Optional<Employee> any = employees.parallelStream()
+                .filter(e -> e.getStatus().equals(Employee.Status.FREE))
+                .findAny();
+        System.out.println(any.get());
+
+        Long count = employees.stream().count();
+        System.out.println(count);
+        Optional<Employee> max = employees.stream().max((e1, e2) -> Double.compare(e1.getSalary(), e2.getSalary()));
+        System.out.println(max.get());
+        Optional<Double> min = employees.stream()
+                .map(Employee::getSalary)
+                .min(Double::compare);
+        System.out.println(min.get());
     }
 
 }
