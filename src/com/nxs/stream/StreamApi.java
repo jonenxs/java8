@@ -46,7 +46,7 @@ public class StreamApi {
 
     List<Employee> employees = Arrays.asList(
             new Employee(101,"张三",18,9999.99),
-            new Employee(102,"李四",21,6666.66),
+            new Employee(102,"李四",20,6666.66),
             new Employee(103,"王五",20,3333.33),
             new Employee(104,"赵六",22,8888.88),
             new Employee(104,"赵六",22,8888.88),
@@ -140,4 +140,27 @@ public class StreamApi {
         }
         return list.stream();
     }
+
+    /**
+     * 排序
+     * sorted() 自然排序
+     * sorted(Comparator com) 定制排序
+     */
+    @Test
+    public void test7() {
+        List<String> list = Arrays.asList("aaa", "bbb", "ccc", "ddd", "eee");
+        list.stream()
+                .sorted()
+                .forEach(System.out::println);
+        System.out.println("--------------");
+        employees.stream()
+                .sorted((e1,e2) ->{
+                    if (e1.getAge().equals(e2.getAge())) {
+                        return e1.getName().compareTo(e2.getName());
+                    }else {
+                        return -e1.getAge().compareTo(e2.getAge());
+                    }
+                }).forEach(System.out::println);
+    }
+
 }
