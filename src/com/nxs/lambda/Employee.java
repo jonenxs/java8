@@ -1,4 +1,7 @@
 package com.nxs.lambda;
+
+import java.util.Objects;
+
 public class Employee {
 
     private Integer id;
@@ -60,5 +63,22 @@ public class Employee {
                 ", age=" + age +
                 ", salary=" + salary +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Employee)) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(getId(), employee.getId()) &&
+                Objects.equals(getName(), employee.getName()) &&
+                Objects.equals(getAge(), employee.getAge()) &&
+                Objects.equals(getSalary(), employee.getSalary());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId(), getName(), getAge(), getSalary());
     }
 }
