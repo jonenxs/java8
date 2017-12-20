@@ -105,4 +105,39 @@ public class StreamApi {
                 .distinct()
                 .forEach(System.out::println);
     }
+
+    /**
+     * 映射
+     * map 接收Lambda,将元素转换成其他形式或提取信息。接收一个函数作为参数，该函数会被应用到每一个元素上，并将其映射成一个新的元素
+     * flatMap 接收一个函数作为参数，将流中的每个值都换成另一个流，然后把所有流连接成一个流
+     */
+    @Test
+    public void test6(){
+        List<String> list = Arrays.asList("aaa", "bbb", "ccc", "ddd", "eee");
+        list.stream()
+                .map(str -> str.toUpperCase())
+                .forEach(System.out::println);
+        System.out.println("-----------");
+        employees.stream().map(Employee::getName)
+                .forEach(System.out::println);
+        System.out.println("-----------");
+        Stream<Stream<Character>> streamStream = list.stream()
+                .map(StreamApi::filterCharacter);
+        streamStream.forEach( sm -> {
+            sm.forEach(System.out::println);
+        });
+        System.out.println("-----------");
+        Stream<Character> stream = list.stream()
+                .flatMap(StreamApi::filterCharacter);
+        stream.forEach(System.out::println);
+    }
+
+    public static Stream<Character> filterCharacter(String string) {
+        List<Character> list = new ArrayList<>();
+        for (Character ch :
+                string.toCharArray()) {
+            list.add(ch);
+        }
+        return list.stream();
+    }
 }
