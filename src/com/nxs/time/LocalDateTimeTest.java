@@ -4,6 +4,8 @@ package com.nxs.time;
 import org.junit.Test;
 
 import java.time.*;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 
 /**
  * @author 57014
@@ -73,6 +75,34 @@ public class LocalDateTimeTest {
         System.out.println(period.getDays());
         System.out.println(period.getUnits());
         System.out.println(period.getChronology());
+
+    }
+
+    /**
+     * 时间矫正器
+     */
+    @Test
+    public void test5() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        System.out.println(localDateTime);
+        LocalDateTime dateTime = localDateTime.withDayOfMonth(10);
+        System.out.println(dateTime);
+
+        LocalDateTime sunday = localDateTime.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+        System.out.println(sunday);
+
+        LocalDateTime time = localDateTime.with(l -> {
+            LocalDateTime ldt = (LocalDateTime) l;
+            DayOfWeek dayOfWeek = ldt.getDayOfWeek();
+            if (dayOfWeek.equals(DayOfWeek.FRIDAY)) {
+                return ldt.plusDays(3);
+            } else if (dayOfWeek.equals(DayOfWeek.SATURDAY)) {
+                return ldt.plusDays(2);
+            } else {
+                return ldt.plusDays(1);
+            }
+        });
+        System.out.println(time);
 
     }
 }
