@@ -4,8 +4,11 @@ package com.nxs.time;
 import org.junit.Test;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Set;
 
 /**
  * @author 57014
@@ -104,5 +107,43 @@ public class LocalDateTimeTest {
         });
         System.out.println(time);
 
+    }
+
+    /**
+     * 格式化日期
+     */
+    @Test
+    public void test6(){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
+        LocalDateTime now = LocalDateTime.now();
+        String format = now.format(dateTimeFormatter);
+        System.out.println(format);
+
+        System.out.println("-----------------------");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss");
+        String s = formatter.format(now);
+        System.out.println(s);
+        LocalDateTime parse = now.parse(s, formatter);
+        System.out.println(parse);
+        TemporalAccessor newDate = formatter.parse(s);
+        System.out.println(newDate);
+    }
+
+    /**
+     * 时区
+     */
+    @Test
+    public void test7() {
+        Set<String> availableZoneIds = ZoneId.getAvailableZoneIds();
+        availableZoneIds.forEach(System.out::println);
+    }
+
+    @Test
+    public void test8() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Malta"));
+        System.out.println(now);
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("Asia/Shanghai"));
+        System.out.println(zonedDateTime);
     }
 }
